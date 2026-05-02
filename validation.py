@@ -56,8 +56,8 @@ def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
             "anomaly_type": typ,
             "description": desc,
             "value": val,
-            "detected_at": now["utc"],
-            "resolved_at": now["utc"],
+            "detected_at": now["wib"],
+            "resolved_at": now["wib"],
             "status": "OPEN"
         })
 
