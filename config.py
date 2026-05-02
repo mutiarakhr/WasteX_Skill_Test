@@ -1,9 +1,20 @@
-from google.auth import default
+import os
+import json
 import gspread
+from google.oauth2.service_account import Credentials
+
+SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
 
 def get_client():
-    creds, _ = default()
+    creds_json = json.loads(os.environ["GOOGLE_CREDS"])
+
+    creds = Credentials.from_service_account_info(
+        creds_json,
+        scopes=SCOPES
+    )
+
     return gspread.authorize(creds)
+
 
 gc = get_client()
 
