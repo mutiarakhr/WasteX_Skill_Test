@@ -1,4 +1,11 @@
 from datetime import datetime
+from zoneinfo import ZoneInfo
+
+def get_now():
+    return {
+        "wib": datetime.now(ZoneInfo("Asia/Jakarta"))
+    }
+
 
 ANOMALY_TYPE_DESC = {
     "Type 1": {"name": "Comma decimal separator", "desc": '"18,45" → 18.45'},
@@ -17,6 +24,8 @@ def log_anomaly(logs, sheet, row_idx, col, anomaly_type, value, auto_fixed=False
 
     info = ANOMALY_TYPE_DESC.get(anomaly_type, {})
 
+    now = get_now()
+
     logs.append({
         "sheet_name": sheet,
         "row_index": row_idx,
@@ -25,7 +34,7 @@ def log_anomaly(logs, sheet, row_idx, col, anomaly_type, value, auto_fixed=False
         "anomaly_name": info.get("name"),
         "description": info.get("desc"),
         "value": value,
-        "detected_at": datetime.now(),
-        "resolved_at": datetime.now() if auto_fixed else None,
+        "detected_at": now["wib"],
+        "resolved_at": now["wib"] if auto_fixed else None,
         "status": "AUTO_FIXED" if auto_fixed else "OPEN"
     })
