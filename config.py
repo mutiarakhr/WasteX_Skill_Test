@@ -1,6 +1,7 @@
 import os
 import json
 import gspread
+import pandas as pd
 from google.oauth2.service_account import Credentials
 
 SCOPES = ["https://www.googleapis.com/auth/spreadsheets"]
