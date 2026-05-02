@@ -1,6 +1,7 @@
 import pandas as pd
 from utils import log_anomaly
 from datetime import datetime, timezone
+import pytz
 
 
 def validate_future_dates(df, sheet_name, logs):
@@ -36,10 +37,10 @@ def validate_future_dates(df, sheet_name, logs):
 
 def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
 
-    logs = []
+    wib = pytz.timezone("Asia/Jakarta")
+    now_wib = datetime.now(wib)
 
-    now_utc = datetime.now(timezone.utc)
-    now_wib = datetime.now(timezone.utc).astimezone()
+    logs = []
 
     def log(sheet, idx, col, typ, desc, val):
         logs.append({
@@ -49,8 +50,8 @@ def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
             "anomaly_type": typ,
             "description": desc,
             "value": val,
-            "detected_at_utc": now_utc,
-            "detected_at_wib": now_wib,
+            "detected_at": now_wib,
+            "resolved_at": now_wib,
             "status": "OPEN"
         })
 
