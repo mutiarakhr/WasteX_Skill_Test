@@ -18,7 +18,7 @@ def main():
 
     automation_log = build_automation_log(cleaned_data, validation_queue, cross_log)
 
-    export_automation_log(cleaned_data, validation_queue, cross_log, spreadsheet_cleaned)
+    export_automation_log(automation_log, spreadsheet_cleaned)
 
 if __name__ == "__main__":
     main()
