@@ -1,3 +1,7 @@
+import os
+
+print("GOOGLE_CREDS exists:", "GOOGLE_CREDS" in os.environ)
+
 from pipeline import run_pipeline
 from export import export_cleaned, export_validation, export_automation_log
 from config import spreadsheet_cleaned, gc, load_sheets
