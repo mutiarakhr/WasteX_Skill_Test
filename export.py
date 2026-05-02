@@ -1,3 +1,6 @@
+import pandas as pd
+from config import CLEANED_MAP
+
 def export_cleaned(cleaned_data, spreadsheet):
 
     for key, sheet_name in CLEANED_MAP.items():
