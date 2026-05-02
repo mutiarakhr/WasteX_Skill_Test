@@ -1,7 +1,13 @@
 import pandas as pd
 from utils import log_anomaly
-from datetime import datetime, timezone
-import pytz
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+
+def get_now():
+    return {
+        "wib": datetime.now(ZoneInfo("Asia/Jakarta"))
+    }
 
 
 def validate_future_dates(df, sheet_name, logs):
@@ -37,12 +43,12 @@ def validate_future_dates(df, sheet_name, logs):
 
 def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
 
-    wib = pytz.timezone("Asia/Jakarta")
-    now_wib = datetime.now(wib)
-
     logs = []
 
     def log(sheet, idx, col, typ, desc, val):
+
+        now = get_now()
+
         logs.append({
             "sheet_name": sheet,
             "row_index": idx,
@@ -50,8 +56,8 @@ def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
             "anomaly_type": typ,
             "description": desc,
             "value": val,
-            "detected_at": now_wib,
-            "resolved_at": now_wib,
+            "detected_at": now["utc"],
+            "resolved_at": now["utc"],
             "status": "OPEN"
         })
 
@@ -78,7 +84,9 @@ def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
 
     for _, r in merged.iterrows():
         if pd.notna(r["total_weight"]) and pd.notna(r["biochar_amount_kg"]):
+
             diff = abs(r["total_weight"] - r["biochar_amount_kg"]) / r["biochar_amount_kg"]
+
             if diff > 0.05:
                 log(
                     "biochar_application",

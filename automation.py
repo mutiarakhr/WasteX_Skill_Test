@@ -1,11 +1,10 @@
 import pandas as pd
 from datetime import datetime, timezone
 import pytz
-
+from zoneinfo import ZoneInfo
 
 def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cross_log=None):
-    wib = pytz.timezone("Asia/Jakarta")
-    run_time_wib = datetime.now(wib)
+    run_time_wib = datetime.now(ZoneInfo("Asia/Jakarta"))
 
     logs = []
 
