@@ -1,9 +1,12 @@
 import pandas as pd
-from datetime import datetime
+from datetime import datetime, timezone
+import pytz
 
 
 def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cross_log=None):
-    run_time = datetime.now()
+    wib = pytz.timezone("Asia/Jakarta")
+    run_time_wib = datetime.now(wib)
+
     logs = []
 
     for sheet_name, df in cleaned_data.items():
@@ -32,7 +35,7 @@ def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cro
             return len(log_df[log_df["anomaly_type"] == type_name])
 
         logs.append({
-            "Run_Timestamp": run_time,
+            "Run_Timestamp": run_time_wib,
             "Sheet_Processed": sheet_name,
             "Records_In": records_in,
             "Records_Clean": records_clean,
