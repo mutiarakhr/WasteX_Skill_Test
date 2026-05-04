@@ -22,9 +22,12 @@ def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cro
         records_flagged = len(log_df)
 
         if not log_df.empty:
-            records_clean = records_in - len(
-                log_df[log_df.get("status", "OPEN") == "OPEN"]
-            )
+            if "status" in log_df.columns:
+                open_count = len(log_df[log_df["status"] == "OPEN"])
+            else:
+                open_count = len(log_df)
+
+            records_clean = records_in - open_count
         else:
             records_clean = records_in
 
