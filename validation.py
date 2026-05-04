@@ -45,35 +45,21 @@ def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
 
     logs = []
 
-    def log(sheet, idx, col, typ, desc, val):
-
-        now = get_now()
-
-        logs.append({
-            "sheet_name": sheet,
-            "row_index": idx,
-            "column_name": col,
-            "anomaly_type": typ,
-            "description": desc,
-            "value": val,
-            "detected_at": now["wib"],
-            "resolved_at": now["wib"],
-            "status": "OPEN"
-        })
-
     valid = set(df_prod["activity_id"].dropna())
 
+    # Type 7: Orphan activity_id
     for idx, row in df_app.iterrows():
         if row.get("activity_id") not in valid:
-            log(
+            log_anomaly(
+                logs,
                 "biochar_application",
                 idx,
                 "activity_id",
                 "Type 7",
-                "orphan",
                 row.get("activity_id")
             )
 
+    # Merge for weight comparison
     merged = df_app.merge(
         df_prod[["activity_id", "biochar_amount_kg"]],
         on="activity_id",
@@ -82,30 +68,33 @@ def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
 
     merged["idx"] = df_app.index
 
+    # Type 8: Weight discrepancy
     for _, r in merged.iterrows():
         if pd.notna(r["total_weight"]) and pd.notna(r["biochar_amount_kg"]):
 
-            diff = abs(r["total_weight"] - r["biochar_amount_kg"]) / r["biochar_amount_kg"]
+            if r["biochar_amount_kg"] > 0:  # جلوگیری dari division by zero
+                diff = abs(r["total_weight"] - r["biochar_amount_kg"]) / r["biochar_amount_kg"]
 
-            if diff > 0.05:
-                log(
-                    "biochar_application",
-                    r["idx"],
-                    "total_weight",
-                    "Type 8",
-                    "mismatch",
-                    r["total_weight"]
-                )
+                if diff > 0.05:
+                    log_anomaly(
+                        logs,
+                        "biochar_application",
+                        r["idx"],
+                        "total_weight",
+                        "Type 8",
+                        r["total_weight"]
+                    )
 
+    # Type 10: Duplicate usage (still based on activity_id — verify if this is correct)
     dup = df_app[df_app["activity_id"].duplicated(keep=False)]
 
     for idx, row in dup.iterrows():
-        log(
+        log_anomaly(
+            logs,
             "biochar_application",
             idx,
             "activity_id",
             "Type 10",
-            "duplicate usage",
             row["activity_id"]
         )
 
