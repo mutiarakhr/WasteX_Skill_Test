@@ -32,9 +32,9 @@ def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cro
             records_clean = records_in
 
         def count_error(type_name):
-            if log_df.empty:
+            if log_df.empty or "anomaly_type" not in log_df.columns:
                 return 0
-            return len(log_df[log_df["anomaly_type"] == type_name])
+            return (log_df["anomaly_type"] == type_name).sum()
 
         logs.append({
             "Run_Timestamp": run_time_wib,
