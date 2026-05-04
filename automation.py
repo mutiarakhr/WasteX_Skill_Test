@@ -32,7 +32,7 @@ def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cro
             records_clean = records_in
 
         def count_error(type_name):
-            if log_df.empty or "anomaly_type" in log_df.columns:
+            if not log_df.empty or "anomaly_type" in log_df.columns:
                 return (log_df["anomaly_type"] == type_name).sum()    
             return 0
 
