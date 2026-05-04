@@ -13,7 +13,7 @@ def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cro
         # filter log per sheet
         if isinstance(validation_queue, pd.DataFrame) and not validation_queue.empty:
             log_df = validation_queue[
-                validation_queue["sheet_name"] == sheet_name
+                validation_queue["sheet_name"].unique() == sheet_name
             ]
         else:
             log_df = pd.DataFrame()
@@ -57,3 +57,4 @@ def build_automation_log(cleaned_data: dict, validation_queue: pd.DataFrame, cro
         })
 
     return pd.DataFrame(logs)
+
