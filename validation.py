@@ -72,7 +72,7 @@ def cross_sheet_validation(df_prod, df_bag, df_app, df_bag_app):
     for _, r in merged.iterrows():
         if pd.notna(r["total_weight"]) and pd.notna(r["biochar_amount_kg"]):
 
-            if r["biochar_amount_kg"] > 0:  # جلوگیری dari division by zero
+            if r["biochar_amount_kg"] > 0: 
                 diff = abs(r["total_weight"] - r["biochar_amount_kg"]) / r["biochar_amount_kg"]
 
                 if diff > 0.05:

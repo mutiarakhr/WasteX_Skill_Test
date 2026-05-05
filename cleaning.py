@@ -36,7 +36,7 @@ def process_biochar_application(df):
     df = df.copy()
     df.columns = df.columns.str.strip().str.lower()
 
-    valid = ["soil", "compost", "water", "other"]
+    valid = ["Application-Pure Biochar", "Application-Charged Biochar", "Sale-Pure Biochar", "Sale-Charged Biochar"]
 
     df["application_date"] = pd.to_datetime(df["application_date"], errors="coerce")
 
