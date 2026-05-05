@@ -36,15 +36,24 @@ def process_biochar_application(df):
     df = df.copy()
     df.columns = df.columns.str.strip().str.lower()
 
-    valid = ["Application-Pure Biochar", "Application-Charged Biochar", "Sale-Pure Biochar", "Sale-Charged Biochar"]
+    valid = [
+        "application-pure biochar",
+        "application-charged biochar",
+        "sale-pure biochar",
+        "sale-charged biochar"
+    ]
 
     df["application_date"] = pd.to_datetime(df["application_date"], errors="coerce")
 
     for idx, row in df.iterrows():
-
         val = row.get("application_type")
 
-        if pd.isna(val) or str(val).lower() not in valid:
+        if pd.notna(val):
+            cleaned_val = str(val).strip().lower()
+        else:
+            cleaned_val = val
+
+        if pd.isna(val) or cleaned_val not in valid:
             log_anomaly(logs, "biochar_application", idx, "application_type", "Type 6", val)
 
     return df, pd.DataFrame(logs)
