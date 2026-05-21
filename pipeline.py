@@ -27,7 +27,7 @@ def run_pipeline(all_sheets):
     log4 = []
     validate_future_dates(df_bag_app, "bag_application", log4)
 
-    # ✅ fix type
+    # fix type
     log4 = pd.DataFrame(log4)
 
     cross_log = cross_sheet_validation(
@@ -44,7 +44,7 @@ def run_pipeline(all_sheets):
         "bag_application": df_bag_app
     }
 
-    # ✅ unified log structure
+    # unified log structure
     validation_queue = {
         "biochar_production": log1,
         "bag_production": log2,
